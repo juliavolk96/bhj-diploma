@@ -8,8 +8,17 @@ class Entity {
    * Это могут быть счета или доходы/расходы
    * (в зависимости от того, что наследуется от Entity)
    * */
-  static list(data, callback){
+  static URL = '';
 
+  static list(data, callback){
+    //объект options содержит информацию о запросе
+    const options = {
+      url: Entity.URL,
+      method: 'GET',
+      data: data,
+      callback: callback
+    };
+    createRequest(options);
   }
 
   /**
@@ -18,7 +27,13 @@ class Entity {
    * что наследуется от Entity)
    * */
   static create(data, callback) {
-
+    const options = {
+      url: Entity.URL,
+      method: 'PUT',
+      data: data,
+      callback: callback
+    };
+    createRequest(options);
   }
 
   /**
@@ -26,6 +41,12 @@ class Entity {
    * (в зависимости от того, что наследуется от Entity)
    * */
   static remove(data, callback ) {
-
+    const options = {
+      url: Entity.URL,
+      method: 'DELETE',
+      data: data,
+      callback: callback
+    };
+    createRequest(options);
   }
 }
