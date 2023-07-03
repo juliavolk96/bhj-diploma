@@ -3,8 +3,6 @@
  * отображения счетов в боковой колонке
  * */
 
-const { response } = require("express");
-
 class AccountsWidget {
   /**
    * Устанавливает текущий элемент в свойство element
