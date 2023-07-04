@@ -86,29 +86,24 @@ class TransactionsPage {
    * Получает список Transaction.list и полученные данные передаёт
    * в TransactionsPage.renderTransactions()
    * */
-  render(options){
-    if(!options) {
-      if(!options) {
+   render(options) {
+    this.lastOptions = options;
+  
+    Account.get(options.account_id, {}, (err, response) => {
+      if (err) {
+        console.error(err);
         return;
       }
-      this.lastOptions = options;
-
-      Account.get(options.account_id, {}, (err, response) => {
-        if(err) {
-          console.error(err);
-          return;
-        }
-        this.renderTitle(response.data.name);
-      });
-
-      Transaction.list(options, (err, response) => {
-        if(err) {
-          console.error(err);
-          return;
-        }
-        this.renderTransactions(response.data);
-      });
-    }
+      this.renderTitle(response.data.name);
+    });
+  
+    Transaction.list(options, (err, response) => {
+      if (err) {
+        console.error(err);
+        return;
+      }
+      this.renderTransactions(response.data);
+    });
   }
 
   /**
@@ -127,7 +122,7 @@ class TransactionsPage {
    * */
   renderTitle(name){
     const titleElement = this.element.querySelector('.content-title');
-    titleElement.textCOntent = name;
+    titleElement.textContent = name;
   }
 
   /**

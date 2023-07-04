@@ -2,35 +2,42 @@
  * Основная функция для совершения запросов
  * на сервер.
  * */
-const createRequest = (options = {}) => {
-  const xhr = new XMLHttpRequest();//экз. XMLHttpRequest
+ const createRequest = (options = {}) => {
+  const { url, data, method, callback } = options;
+  const xhr = new XMLHttpRequest();
 
-  xhr.responseType = 'json';//тип ответа
-  
-  //будет вызываться при изменении состояния запроса
-  xhr.addEventListener("readystatechange", () => {
-    if(xhr.readyState === XMLHttpRequest.DONE) {
-      if(xhr.status >= 200 && xhr.status < 400) {
-        options.callback(null, xhr.response);
-      } else {
-        options.callback(new Error(xhr.statusText), null);
-      }
+  // Пункт 1: Инициализация объекта XMLHttpRequest
+  xhr.open(method, url);
+
+  // Пункт 2: Установка данных в запрос
+  if (method === 'GET') {
+    const params = new URLSearchParams(data).toString();
+    xhr.open(method, `${url}?${params}`);
+  } else {
+    const formData = new FormData();
+    for (const key in data) {
+      formData.append(key, data[key]);
     }
-  });
-
-  let url = options.url;
-  let data = null;
-
-  if(options.method === "GET" && options.data) {
-    const params = new URLSearchParams(options.data);
-    url += "?" + params.toString();
-  } else if(options.method !== "GET" && options.data) {
-    data = new FormData();
-    for(let key in options.data) {
-      data.append(key, options.data[key]);
-    }
+    xhr.send(formData);
   }
 
-  xhr.open(options.method, url);
-  xhr.send(data);//отправление запроса
+  // Пункт 3: Установка формата ответа
+  xhr.responseType = 'json';
+
+  // Пункт 4: Обработка ответа
+  xhr.onload = function () {
+    if (xhr.status === 200) {
+      callback(null, xhr.response);
+    } else {
+      callback(new Error(`Request failed with status ${xhr.status}`));
+    }
+  };
+
+  // Обработка ошибок
+  xhr.onerror = function () {
+    callback(new Error('Request failed'));
+  };
+
+  // Отправка запроса
+  xhr.send();
 };

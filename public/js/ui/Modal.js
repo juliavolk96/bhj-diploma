@@ -4,16 +4,16 @@
  * В первую очередь это открытие или
  * закрытие имеющихся окон
  * */
-class Modal {
+ class Modal {
   /**
    * Устанавливает текущий элемент в свойство element
    * Регистрирует обработчики событий с помощью Modal.registerEvents()
    * Если переданный элемент не существует,
    * необходимо выкинуть ошибку.
    * */
-  constructor(element){
+  constructor(element) {
     if (!element) {
-      throw new Error("Modal element is not specified.");
+      throw new Error('Modal element is not specified');
     }
     this.element = element;
     this.registerEvents();
@@ -25,11 +25,9 @@ class Modal {
    * (с помощью метода Modal.onClose)
    * */
   registerEvents() {
-    const dismissButtons = this.element.querySelectorAll('[data-dismiss="modal"]');
-    dismissButtons.forEach((button) => {
-      button.addEventListener("click", (e) => {
-        this.onClose(e);
-      });
+    const dismissElements = this.element.querySelectorAll('[data-dismiss="modal"]');
+    dismissElements.forEach((dismissElement) => {
+      dismissElement.addEventListener('click', this.onClose.bind(this));
     });
   }
 
@@ -38,19 +36,22 @@ class Modal {
    * Закрывает текущее окно (Modal.close())
    * */
   onClose(e) {
+    e.preventDefault();
     this.close();
   }
+
   /**
    * Открывает окно: устанавливает CSS-свойство display
    * со значением «block»
    * */
   open() {
-    this.element.style.display = "block";
+    this.element.style.display = 'block';
   }
+
   /**
    * Закрывает окно: удаляет CSS-свойство display
    * */
-  close(){
-    this.element.style.display = "";
+  close() {
+    this.element.style.display = '';
   }
 }

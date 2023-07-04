@@ -2,7 +2,7 @@
  * Класс CreateTransactionForm управляет формой
  * создания новой транзакции
  * */
-class CreateTransactionForm extends AsyncForm {
+ class CreateTransactionForm extends AsyncForm {
   /**
    * Вызывает родительский конструктор и
    * метод renderAccountsList
@@ -17,12 +17,17 @@ class CreateTransactionForm extends AsyncForm {
    * Обновляет в форме всплывающего окна выпадающий список
    * */
   renderAccountsList() {
-    const accountList = this.element.querySelector('.accounts-select');
-    Account.list({}, (err, response) => {
-      if(response.success) {
-        accountList.innerHTML = response.data
-        .map(account => `<option value="${account.id}">${account.name}</option>`)
-        .join('');
+    Account.list(User.current(), (err, response) => {
+      if (response && response.success) {
+        const accountsList = this.element.querySelector('.accounts-select');
+        accountsList.innerHTML = '';
+
+        response.data.forEach(account => {
+          const option = document.createElement('option');
+          option.value = account.id;
+          option.textContent = account.name;
+          accountsList.appendChild(option);
+        });
       }
     });
   }
@@ -34,16 +39,13 @@ class CreateTransactionForm extends AsyncForm {
    * в котором находится форма
    * */
   onSubmit(data) {
-    TransactionsWidget.create(data, (err, response) => {
-      if(response.success) {
+    Transaction.create(data, (err, response) => {
+      if (response && response.success) {
         this.element.reset();
-        const modal = this.element.closest('.modal');
-        if(modal) {
-          const modalId = modal.getAttribute('data-modal-id');
-          App.getModal(modalId).close();
-        }
+        const modalId = this.element.closest('.modal').getAttribute('data-modal-id');
+        App.getModal(modalId).close();
         App.update();
       }
-    })
+    });
   }
 }

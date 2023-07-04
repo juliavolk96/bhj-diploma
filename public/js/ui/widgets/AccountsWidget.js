@@ -3,7 +3,7 @@
  * отображения счетов в боковой колонке
  * */
 
-class AccountsWidget {
+ class AccountsWidget {
   /**
    * Устанавливает текущий элемент в свойство element
    * Регистрирует обработчики событий с помощью
@@ -13,11 +13,10 @@ class AccountsWidget {
    * Если переданный элемент не существует,
    * необходимо выкинуть ошибку.
    * */
-  constructor( element ) {
-    if(!element) {
-      throw new Error('Элемент не сущетсвует');
+  constructor(element) {
+    if (!element) {
+      throw new Error('Элемент не существует');
     }
-
     this.element = element;
     this.registerEvents();
     this.update();
@@ -31,17 +30,17 @@ class AccountsWidget {
    * вызывает AccountsWidget.onSelectAccount()
    * */
   registerEvents() {
-     const CreateAccountButton = this.element.querySelector('.create-account');
-     CreateAccountButton.addEventListener('click',() => {
-      App.getModal('newAccount').open();
-     });
+    const createAccountBtn = this.element.querySelector('.create-account');
+    createAccountBtn.addEventListener('click', () => {
+      App.getModal('createAccount').open();
+    });
 
-     const accounts = this.element.querySelectorAll('.account');
-     accounts.forEach(account => {
-      account.addEventListener('click', () => {
-        this.onSelectAccount(account);
+    const accountItems = this.element.querySelectorAll('.account');
+    accountItems.forEach((item) => {
+      item.addEventListener('click', (event) => {
+        this.onSelectAccount(event.currentTarget);
       });
-     });
+    });
   }
 
   /**
@@ -55,16 +54,16 @@ class AccountsWidget {
    * метода renderItem()
    * */
   update() {
-    if(User.current()) {
+    if (User.current()) {
       Account.list(User.current(), (response) => {
-        if(response.success) {
+        if (response && response.success) {
           this.clear();
-          response.data.forEach(account => {
-            const accountHTML = this.getAccountHTML(account);     
-            this.renderItem(accountHTML);     
-          })
+          response.data.forEach((account) => {
+            const accountHTML = this.getAccountHTML(account);
+            this.renderItem(accountHTML);
+          });
         }
-      })
+      });
     }
   }
 
@@ -74,10 +73,10 @@ class AccountsWidget {
    * в боковой колонке
    * */
   clear() {
-    const accountElements = this.element.querySelectorAll('.account');
-    accountElements.forEach(account => {
-      account.remove();
-    })
+    const accountItems = this.element.querySelectorAll('.account');
+    accountItems.forEach((item) => {
+      item.remove();
+    });
   }
 
   /**
@@ -87,15 +86,14 @@ class AccountsWidget {
    * счёта класс .active.
    * Вызывает App.showPage( 'transactions', { account_id: id_счёта });
    * */
-  onSelectAccount( element ) {
-    const activeAccount = this.element.querySelector('.account.active');
-    if(activeAccount) {
-      activeAccount.classList.remove('active');
+  onSelectAccount(element) {
+    const activeItem = this.element.querySelector('.account.active');
+    if (activeItem) {
+      activeItem.classList.remove('active');
     }
-
     element.classList.add('active');
     const accountId = element.dataset.id;
-    App.showPage('transactions', { account_id: accountId});
+    App.showPage('transactions', { account_id: accountId });
   }
 
   /**
@@ -103,15 +101,13 @@ class AccountsWidget {
    * отображения в боковой колонке.
    * item - объект с данными о счёте
    * */
-  getAccountHTML(item){
-    return `
-      <li class="account" data-id="${item.id}">
-          <a href="#">
-              <span>${item.name}</span> /
-              <span>${item.sum.toFixed(2)} ₽<span>
-          </a>
-      </li>
-    `;
+  getAccountHTML(item) {
+    return `<li class="account" data-id="${item.id}">
+              <a href="#">
+                <span>${item.name}</span> /
+                <span>${item.sum.toFixed(2)} ₽</span>
+              </a>
+            </li>`;
   }
 
   /**
@@ -120,7 +116,7 @@ class AccountsWidget {
    * AccountsWidget.getAccountHTML HTML-код элемента
    * и добавляет его внутрь элемента виджета
    * */
-  renderItem(data){
-    this.element.insertAdjacentHTML('beforeend', data)
+  renderItem(data) {
+    this.element.insertAdjacentHTML('beforeend', data);
   }
 }

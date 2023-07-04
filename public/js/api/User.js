@@ -3,8 +3,9 @@
  * регистрацией пользователя из приложения
  * Имеет свойство URL, равное '/user'.
  * */
-class User {
+ class User {
   static URL = '/user';
+
   /**
    * Устанавливает текущего пользователя в
    * локальном хранилище.
@@ -40,7 +41,7 @@ class User {
       method: 'GET',
       responseType: 'json',
       callback: (err, response) => {
-        if(response && response.success) {
+        if (response && response.success) {
           this.setCurrent(response.user);
         } else {
           this.unsetCurrent();
@@ -84,12 +85,12 @@ class User {
       responseType: 'json',
       data,
       callback: (err, response) => {
-        if (response && response.user) {
+        if (response && response.success && response.user) {
           this.setCurrent(response.user);
         }
         callback(err, response);
       }
-    })
+    });
   }
 
   /**
