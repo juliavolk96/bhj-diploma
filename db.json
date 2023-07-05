@@ -5,6 +5,12 @@
       "email": "demo@demo",
       "password": "demo",
       "id": "1"
+    },
+    {
+      "name": "Юлия",
+      "email": "test@test.ru",
+      "password": "123456123456",
+      "id": "c9b5ptdpcljogjfn8"
     }
   ],
   "accounts": [
@@ -22,6 +28,16 @@
       "name": "Бизнес",
       "user_id": "1",
       "id": "3"
+    },
+    {
+      "name": "счет 1",
+      "user_id": "c9b5ptdpcljogjfn8",
+      "id": "c9b5ptfosljpflb64"
+    },
+    {
+      "name": "счет 2",
+      "user_id": "c9b5ptdpcljogjfn8",
+      "id": "c9b5pt5zgljpj87fp"
     }
   ],
   "transactions": [
@@ -159,6 +175,33 @@
       "sum": 300000,
       "type": "expense",
       "user_id": "1"
+    },
+    {
+      "id": "c9b5pte54ljpflq5n",
+      "type": "income",
+      "name": "1",
+      "sum": 100,
+      "account_id": "c9b5ptfosljpflb64",
+      "user_id": "c9b5ptdpcljogjfn8",
+      "created_at": "2023-07-05T08:02:52.714Z"
+    },
+    {
+      "id": "c9b5ptfqoljpjvxh1",
+      "type": "income",
+      "name": "счет 1",
+      "sum": 100,
+      "account_id": "c9b5ptfosljpflb64",
+      "user_id": "c9b5ptdpcljogjfn8",
+      "created_at": "2023-07-05T10:02:47.220Z"
+    },
+    {
+      "id": "c9b5pt5poljpk301r",
+      "type": "expense",
+      "name": "1",
+      "sum": 100,
+      "account_id": "c9b5ptfosljpflb64",
+      "user_id": "c9b5ptdpcljogjfn8",
+      "created_at": "2023-07-05T10:08:17.150Z"
     }
   ]
 }
