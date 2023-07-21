@@ -32,7 +32,7 @@
   registerEvents() {
     const createAccountButton = this.element.querySelector('.create-account');
     createAccountButton.addEventListener('click', () => {
-      const modalNewAccount = App.getModal('new-account');
+      const modalNewAccount = App.getModal('createAccount');
       modalNewAccount.open();
     });
 

@@ -29,29 +29,31 @@ class Sidebar {
    * При нажатии на кнопку выхода вызывает User.logout и по успешному
    * выходу устанавливает App.setState('init')
    */
-  static initAuthLinks() {
+   static initAuthLinks() {
     const loginButton = document.querySelector('.menu-item_login');
     loginButton.addEventListener('click', function (event) {
       event.preventDefault();
       const loginModal = App.getModal('login');
       loginModal.open();
     });
-
+  
     const registerButton = document.querySelector('.menu-item_register');
     registerButton.addEventListener('click', function (event) {
       event.preventDefault();
       const registerModal = App.getModal('register');
       registerModal.open();
     });
-
+  
     const logoutButton = document.querySelector('.menu-item_logout');
     logoutButton.addEventListener('click', function (event) {
       event.preventDefault();
-      User.logout(function (response) {
+      User.logout(function (err, response) {
+        console.log(response)
         if (response && response.success) {
           App.setState('init');
+          App.updateWidgets(); // Обновление виджетов
         }
       });
     });
-  }
+  }  
 }

@@ -1,24 +1,27 @@
 /**
- * Класс TransactionsPage управляет
- * страницей отображения доходов и
- * расходов конкретного счёта
+ * Класс TransactionsPage управляет страницей отображения доходов и расходов конкретного счёта.
  */
- class TransactionsPage {
+class TransactionsPage {
   /**
    * Если переданный элемент не существует,
    * необходимо выкинуть ошибку.
    * Сохраняет переданный элемент и регистрирует события
    * через registerEvents()
+   * @param {HTMLElement} element - HTML-элемент, соответствующий странице.
+   * @throws {Error} Если переданный элемент не существует.
    */
   constructor(element) {
     if (!element) {
       throw new Error("Элемент не существует");
     }
-    this.element = element;
-    this.lastOptions = null; // Инициализация свойства lastOptions
-    this.registerEvents();
+    this.element = element; // Сохраняем переданный элемент в свойство element
+    this.lastOptions = null; // Переменная для хранения последних опций (идентификатора счёта)
+    this.registerEvents(); // Регистрируем обработчики событий
 
-    this.render({ account_id: "your_account_id_here" });
+    // Отображение страницы с фиктивным account_id (замените на актуальный идентификатор счёта)
+    this.render({
+      account_id: element.querySelector(".content-title").textContent,
+    });
   }
 
   /**
@@ -35,14 +38,17 @@
    * TransactionsPage.removeAccount соответственно
    */
   registerEvents() {
+    // Добавляем обработчик клика на элемент страницы (вешаем на всю страницу)
     this.element.addEventListener("click", (event) => {
       if (event.target.classList.contains("remove-account")) {
+        // При клике на кнопку удаления счёта
         if (confirm("Вы действительно хотите удалить счет?")) {
-          this.removeAccount();
+          this.removeAccount(); // Вызываем метод removeAccount() для удаления счёта
         }
       } else if (event.target.classList.contains("transaction__remove")) {
+        // При клике на кнопку удаления транзакции
         const transactionId = event.target.getAttribute("data-id");
-        this.removeTransaction(transactionId);
+        this.removeTransaction(transactionId); // Вызываем метод removeTransaction() для удаления транзакции
       }
     });
   }
@@ -57,10 +63,13 @@
    * для обновления приложения
    */
   removeAccount() {
-    if (!this.lastOptions) {
-      return;
-    }
-    Account.remove(this.lastOptions.account_id, {}, (err, response) => {
+    // if (!this.lastOptions) {
+    //   return;
+    // }
+    Account.remove(this.lastOptions.account_id, (err, response) => {
+      console.log(this.lastOptions);
+      console.log(err);
+      console.log(response);
       if (err) {
         console.error(err);
         return;
@@ -94,19 +103,26 @@
    * в TransactionsPage.renderTransactions()
    */
   render(options) {
+    // if (!options || !options.account_id) {
+    //   return;
+    // }
+
     this.lastOptions = options;
 
-    Account.get(options.account_id, {}, (err, response) => {
+    Account.get(options.account_id, (err, response) => {
       if (err) {
-        console.error(err);
         return;
       }
-      this.renderTitle(response.data.name);
+      const accountName =
+        response.data && response.data.name
+          ? response.data.name
+          : "Название счёта не найдено";
+      this.renderTitle(accountName);
     });
 
-    Transaction.list(options, (err, response) => {
+    Transaction.list(options.account_id, (err, response) => {
+      console.log(response);
       if (err) {
-        console.error(err);
         return;
       }
       this.renderTransactions(response.data);
@@ -154,7 +170,8 @@
   getTransactionHTML(item) {
     const formattedDate = this.formatDate(item.created_at);
 
-    const transactionType = item.type === "expense" ? "transaction_expense" : "transaction_income";
+    const transactionType =
+      item.type === "expense" ? "transaction_expense" : "transaction_income";
 
     const transactionHTML = `
       <div class="transaction ${transactionType} row">
