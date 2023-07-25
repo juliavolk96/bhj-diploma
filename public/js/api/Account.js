@@ -10,8 +10,9 @@
   *Получает информацию о счёте
   */
   static get(id = '', callback) {
+    const url = id ? `${this.URL}/${id}` : this.URL;
     const options = {
-      url: `${this.URL}/${id}`,
+      url: url,
       method: 'GET',
       callback: callback,
     };
